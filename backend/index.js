@@ -61,6 +61,36 @@ app.get("/films/:id", (req, res) => {
   });
 });
 
+app.get("/users/:id/list", (req, res) => {
+  const u_id = req.params.id;
+  db.query(
+    "SELECT * FROM films WHERE film_id in (SELECT f_id FROM lists WHERE u_id = ?)",
+    u_id,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
+app.get("/users/:id/reaction", (req, res) => {
+  const u_id = req.params.id;
+  db.query(
+    "SELECT title, cover FROM films WHERE film_id in (SELECT f_id FROM reactions WHERE u_id = ?)",
+    u_id,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
